@@ -15,8 +15,27 @@ namespace BusinessLayer.Services
         public EmployeeBL(IEmployeeRL employeeRL)
         {
             this.employeeRL = employeeRL;
-        }        
-
+        }
+        /// <summary>
+        /// Registers the employee.
+        /// </summary>
+        /// <param name="employee">The employee.</param>
+        /// <returns></returns>
+        public bool RegisterEmployee(RegisterModel employee)
+        {
+            try
+            {
+                return this.employeeRL.RegisterEmployee(employee);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        /// <summary>
+        /// Gets all employee.
+        /// </summary>
+        /// <returns></returns>
         public List<CompanyEmployee> GetAllEmployee()
         {
             try

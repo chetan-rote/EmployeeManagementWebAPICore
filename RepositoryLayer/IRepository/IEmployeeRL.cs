@@ -9,5 +9,6 @@ namespace RepositoryLayer.IRepository
     public interface IEmployeeRL
     {               
         List<CompanyEmployee> GetAllEmployee();
+        bool RegisterEmployee(RegisterModel employee);
     }
 }
