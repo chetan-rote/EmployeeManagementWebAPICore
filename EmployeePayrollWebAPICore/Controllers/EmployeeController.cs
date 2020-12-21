@@ -16,12 +16,54 @@ namespace EmployeePayrollWebAPICore.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeBL employeeBL;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmployeeController"/> class.
+        /// </summary>
+        /// <param name="employeeBL">The employee bl.</param>
         public EmployeeController(IEmployeeBL employeeBL)
         {
             this.employeeBL = employeeBL;
-        }               
+        }
+        /// <summary>
+        /// Adds new the employee.
+        /// </summary>
+        /// <param name="employee">The employee.</param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult RegisterEmployee(RegisterModel employee)
+        {
+            try
+            {
+                if (this.employeeBL.RegisterEmployee(employee))
+                {
+                    return this.Ok(new { success = true, Message = "Employee record added successfully" });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, Message = "Employee record is not added " });
+                }
+            }
+            catch (Exception e)
+            {
+                var sqlException = e.InnerException as SqlException;
 
+                if (sqlException.Number == 2601 || sqlException.Number == 2627)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict,
+                        new { success = false, ErrorMessage = "Cannot insert duplicate Email values." });
+                }
+                else
+                {
+                    return this.BadRequest(new { success = false, Message = e.Message });
+                }
+
+            }
+        }
+        /// <summary>
+        /// Gets all employee.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult GetAllEmployee()
         {

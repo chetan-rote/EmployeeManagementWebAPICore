@@ -16,8 +16,48 @@ namespace RepositoryLayer.Repository
         public EmployeeRL(EmployeeContext context)
         {
             this.context = context;
-        }                
+        }
+        /// <summary>
+        /// Adds new the employee to database.
+        /// </summary>
+        /// <param name="employee">The employee.</param>
+        /// <returns></returns>
+        public bool RegisterEmployee(RegisterModel employee)
+        {
+            try
+            {
+                CompanyEmployee employeeObject = new CompanyEmployee()
+                {
+                    FirstName = employee.FirstName,
+                    LastName = employee.LastName,
+                    Email = employee.Email,
+                    Password = employee.Password,
+                    PhoneNumber = employee.PhoneNumber,
+                    Role = "Employee",
+                    CreatedDateTime = DateTime.UtcNow,
+                    ModifiedDateTime = null
+                };
 
+                this.context.Employees.Add(employeeObject);
+                int result = this.context.SaveChanges();
+                if (result > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        /// <summary>
+        /// Gets all employee.
+        /// </summary>
+        /// <returns></returns>
         public List<CompanyEmployee> GetAllEmployee()
         {
             try
