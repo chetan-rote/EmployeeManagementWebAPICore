@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using BusinessLayer.IServices;
+using BusinessLayer.MSMQServices;
 using CommonLayer.RequestModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +24,9 @@ namespace EmployeePayrollWebAPICore.Controllers
     {
         private readonly IAdminBL adminBL;
 
-        IConfiguration configuration;        
+        IConfiguration configuration;
+
+        MSMQ mSMQ = new MSMQ();
 
         public AdminController(IAdminBL adminBL, IConfiguration configuration)
         {
@@ -38,7 +41,8 @@ namespace EmployeePayrollWebAPICore.Controllers
             try
             {
                 if (this.adminBL.RegisterAdmin(admin))
-                {                    
+                {
+                    this.mSMQ.AddToQueue(admin.Email + " Admin has been registered successfully.");
                     return this.Ok(new { success = true, Message = "Admin record added successfully" });
                 }
                 else

@@ -64,5 +64,21 @@ namespace BusinessLayer.Services
                 throw e;
             }
         }
+        /// <summary>
+        /// Deletes the specified emp identifier.
+        /// </summary>
+        /// <param name="EmpId">The emp identifier.</param>
+        /// <returns></returns>
+        public bool Delete(int EmpId)
+        {
+            try
+            {
+                return this.employeeRL.Delete(EmpId);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
