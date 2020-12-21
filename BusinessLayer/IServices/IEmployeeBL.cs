@@ -10,5 +10,6 @@ namespace BusinessLayer.IServices
     {        
         List<CompanyEmployee> GetAllEmployee();
         bool RegisterEmployee(RegisterModel employee);
+        bool EditEmployee(UpdateModel updatedEmployee, int EmpId);
     }
 }

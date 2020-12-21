@@ -82,5 +82,41 @@ namespace RepositoryLayer.Repository
                 throw e;
             }
         }
+        /// <summary>
+        /// Edits the employee.
+        /// </summary>
+        /// <param name="updatedEmployee">The updated employee.</param>
+        /// <param name="EmpId">The emp identifier.</param>
+        /// <returns></returns>
+        public bool EditEmployee(UpdateModel updatedEmployee, int EmpId)
+        {
+            try
+            {
+                CompanyEmployee employee = this.context.Employees.Where(x => x.EmployeeId == EmpId).FirstOrDefault();
+                if (employee != null)
+                {
+                    employee.EmployeeId = EmpId;
+                    employee.FirstName = updatedEmployee.FirstName;
+                    employee.LastName = updatedEmployee.LastName;
+                    employee.PhoneNumber = updatedEmployee.PhoneNumber;
+                    employee.Password = updatedEmployee.Password;
+                    employee.ModifiedDateTime = DateTime.Now;
+                    int result = this.context.SaveChanges();
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
