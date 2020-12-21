@@ -84,5 +84,26 @@ namespace EmployeePayrollWebAPICore.Controllers
                 return this.BadRequest(new { success = false, Message = e.Message });
             }
         }
+
+        [HttpPut("{EmpId}")]
+        public IActionResult EditEmployee(int EmpId, UpdateModel employee)
+        {
+            try
+            {
+                if (this.employeeBL.EditEmployee(employee, EmpId))
+                {
+                    return this.Ok(new { success = true, Message = "Employee record updated successfully" });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, Message = "Employee record is not updated " });
+                }
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { success = false, Message = e.Message });
+            }
+        }
     }
 }
