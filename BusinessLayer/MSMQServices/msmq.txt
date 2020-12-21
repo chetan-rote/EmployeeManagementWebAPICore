@@ -1,0 +1,2 @@
+﻿shubham@gmail.com Admin has been registered successfully.
+durgesh@gmail.com Employee has been registered successfully.

@@ -118,5 +118,34 @@ namespace RepositoryLayer.Repository
                 throw e;
             }
         }
+        /// <summary>
+        /// Deletes the specified emp identifier.
+        /// </summary>
+        /// <param name="EmpId">The emp identifier.</param>
+        /// <returns></returns>
+        public bool Delete(int EmpId)
+        {
+            try
+            {
+                CompanyEmployee employee = this.context.Employees.Where(x => x.EmployeeId == EmpId).FirstOrDefault();
+                if (employee != null)
+                {
+                    this.context.Employees.Remove(employee);
+                }
+                int result = this.context.SaveChanges();
+                if (result > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

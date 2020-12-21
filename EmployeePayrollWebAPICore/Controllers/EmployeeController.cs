@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.IServices;
+using BusinessLayer.MSMQServices;
 using CommonLayer.RequestModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace EmployeePayrollWebAPICore.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        MSMQ mSMQ = new MSMQ();
         private readonly IEmployeeBL employeeBL;
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeController"/> class.
@@ -36,6 +38,7 @@ namespace EmployeePayrollWebAPICore.Controllers
             {
                 if (this.employeeBL.RegisterEmployee(employee))
                 {
+                    this.mSMQ.AddToQueue(employee.Email + " Employee has been registered successfully.");
                     return this.Ok(new { success = true, Message = "Employee record added successfully" });
                 }
                 else
@@ -84,7 +87,12 @@ namespace EmployeePayrollWebAPICore.Controllers
                 return this.BadRequest(new { success = false, Message = e.Message });
             }
         }
-
+        /// <summary>
+        /// Edits the employee.
+        /// </summary>
+        /// <param name="EmpId">The emp identifier.</param>
+        /// <param name="employee">The employee.</param>
+        /// <returns></returns>
         [HttpPut("{EmpId}")]
         public IActionResult EditEmployee(int EmpId, UpdateModel employee)
         {
@@ -98,6 +106,30 @@ namespace EmployeePayrollWebAPICore.Controllers
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError,
                         new { success = false, Message = "Employee record is not updated " });
+                }
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { success = false, Message = e.Message });
+            }
+        }
+        /// <summary>
+        /// Deletes the specified emp identifier.
+        /// </summary>
+        /// <param name="EmpId">The emp identifier.</param>
+        /// <returns></returns>
+        [HttpDelete("{EmpId}")]
+        public IActionResult Delete(int EmpId)
+        {
+            try
+            {
+                if (this.employeeBL.Delete(EmpId))
+                {
+                    return this.Ok(new { success = true, Message = "Employee record Deleted successfully" });
+                }
+                else
+                {
+                    return this.NotFound(new { success = false, Message = "Employee record Deleted unsuccessfully" });
                 }
             }
             catch (Exception e)
